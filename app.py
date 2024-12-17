@@ -69,7 +69,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             range_y=[0.93, 1.01],
-                            title="Tasa en Línea - De Leña")
+                            title="Tasa en Línea - De Leña",
+                            text = 'tasa en línea')
+            fig6.update_traces(textposition='top center')
             fig6.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                         x=0.3,
@@ -97,7 +99,9 @@ else:
                             markers=True,
                             title='# Pedidos en Ubear Eats - De Leña',
                             line_group='año',
-                            color_discrete_sequence=['aqua', 'teal'])
+                            color_discrete_sequence=['aqua', 'teal'],
+                            text='pedidos')
+            fig8.update_traces(textposition='bottom center')
             fig8.update_layout(title = dict(
                                         x=0.3,
                                         y=0.9,
@@ -133,7 +137,9 @@ else:
                             title='Ticket Promedio',
                             line_group='año',
                             color_discrete_sequence=['aqua', 'teal'],
-                            line_dash_sequence=['longdashdot'])
+                            line_dash_sequence=['dashdot'],
+                            text='ticket promedio')
+            fig9.update_traces(textposition='top center')
             fig9.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -199,7 +205,8 @@ else:
                             line_shape='spline',
                             color='sucursal',
                             title='Número de Pedidos - De Leña',
-                            markers=True)
+                            markers=True,
+                            color_discrete_sequence=['orange', 'orangered'])
             fig19.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -215,7 +222,7 @@ else:
                             color='sucursal',
                             title='Ticket Premedio - De Leña',
                             markers=True,
-                            color_discrete_sequence=['white', 'yellow'])
+                            color_discrete_sequence=['orange', 'orangered'])
             fig21.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -230,7 +237,7 @@ else:
                             color='sucursal',
                             title='Ventas por Mes - De Leña',
                             markers=True,
-                            color_discrete_sequence=['white', 'yellow'])
+                            color_discrete_sequence=['orange', 'orangered'])
             fig20.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -337,4 +344,56 @@ else:
                                     font=dict(size=20)))
             st.plotly_chart(fig18)
         else:
-            st.header('Rappi Arracház')
+            st.header(':orange[Rappi] Arracház')
+            st.subheader('Pedidos', divider=True)
+            rappi_arrachaz = rappi[rappi['restaurante'] == 'Arracház']
+            #rappi_arrachaz
+            # gráfico pedidos arracház rappi
+            fig22 = px.line(rappi_arrachaz,
+                            x='mes',
+                            y='pedidos',
+                            line_shape='spline',
+                            title='# Pedidos - Arracház',
+                            color='sucursal',
+                            text='pedidos',
+                            color_discrete_sequence=['darkorange'])
+            fig22.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                    x=0.3,
+                                    y=.9,
+                                    font=dict(size=20)))
+            fig22.update_traces(textposition='top center')
+            st.plotly_chart(fig22)
+            st.subheader('Ventas', divider=True)
+            # gráfico ticket promedio arrachaz rappi
+            fig23 = px.line(rappi_arrachaz,
+                            x='mes',
+                            y='ticket promedio',
+                            line_shape='spline',
+                            title='Ticket Promedio - Arracház',
+                            color='sucursal',
+                            text='ticket promedio',
+                            color_discrete_sequence=['darkorange'])
+            fig23.update_layout(yaxis=dict(showgrid=False),
+                                title=dict(
+                                    x=0.3,
+                                    y=0.9,
+                                    font=dict(size=20)))
+            fig23.update_traces(textposition='top center')
+            st.plotly_chart(fig23)
+            # gráfico ventas por mes arracház rappi
+            fig24 = px.line(rappi_arrachaz,
+                            x='mes',
+                            y='ventas',
+                            line_shape='spline',
+                            title='Ventas Totales por Mes - Arracház',
+                            color='sucursal',
+                            text='ventas',
+                            color_discrete_sequence=['darkorange'])
+            fig24.update_layout(yaxis=dict(showgrid=False),
+                                title=dict(
+                                    x=0.3,
+                                    y=0.9,
+                                    font=dict(size=20)))
+            fig24.update_traces(textposition='top center')
+            st.plotly_chart(fig24)
