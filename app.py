@@ -9,6 +9,7 @@ seguidores = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=0
 linea = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=2)
 pedidos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=4)
 incorrectos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=5)
+rappi = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=6)
 
 metrica = st.radio("Selecciona el indicador:", 
                    ["Redes Sociales", "Plataformas Delivery"],
@@ -56,7 +57,7 @@ else:
                             ["*UberEats*", "*Rappi*"],
                             horizontal=True)
         if plataforma == "*UberEats*":
-            st.header(":green[Uber Eats]")
+            st.header(":green[Uber Eats] De Leña")
             st.subheader('Tasa en Línea', divider=True)
             linea_delena = linea[linea['restaurante'] == 'DeLeña']
             # linea_delena
@@ -94,7 +95,9 @@ else:
                             color='sucursal',
                             line_shape='spline',
                             markers=True,
-                            title='# Pedidos en Ubear Eats - De Leña')
+                            title='# Pedidos en Ubear Eats - De Leña',
+                            line_group='año',
+                            color_discrete_sequence=['aqua', 'teal'])
             fig8.update_layout(title = dict(
                                         x=0.3,
                                         y=0.9,
@@ -127,7 +130,10 @@ else:
                             color='sucursal',
                             line_shape='spline',
                             markers=True,
-                            title='Ticket Promedio')
+                            title='Ticket Promedio',
+                            line_group='año',
+                            color_discrete_sequence=['aqua', 'teal'],
+                            line_dash_sequence=['longdashdot'])
             fig9.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -141,7 +147,9 @@ else:
                             color='sucursal',
                             line_shape='spline',
                             markers=True,
-                            title='Ventas por Mes - De Leña')
+                            title='Ventas por Mes - De Leña',
+                            line_group='año',
+                            color_discrete_sequence=['white', 'gray'])
             fig10.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -179,12 +187,62 @@ else:
                                     y=.9,
                                     font=dict(size=20)))
             st.plotly_chart(fig12)
+        else:
+            st.header(':orange[Rappi] DeLeña')
+            rappi_delena = rappi[rappi['restaurante'] == 'DeLeña']
+            #rappi_delena
+            st.header('Pedidos', divider=True)
+            # gráfica número pedidos deleña rappi
+            fig19 = px.line(rappi_delena,
+                            x='mes',
+                            y='pedidos',
+                            line_shape='spline',
+                            color='sucursal',
+                            title='Número de Pedidos - De Leña',
+                            markers=True)
+            fig19.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                    x=0.3,
+                                    y=.9,
+                                    font=dict(size=20)))
+            st.plotly_chart(fig19)
+            st.header('Ventas', divider=True)
+            # gráfica ticket promedio deleña rappi
+            fig21 = px.line(rappi_delena,
+                            x='mes',
+                            y='ticket promedio',
+                            line_shape='spline',
+                            color='sucursal',
+                            title='Ticket Premedio - De Leña',
+                            markers=True,
+                            color_discrete_sequence=['white', 'yellow'])
+            fig21.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                    x=0.3,
+                                    y=.9,
+                                    font=dict(size=20)))
+            st.plotly_chart(fig21)
+            # ventas totales por mes deleña rappi
+            fig20 = px.line(rappi_delena,
+                            x='mes',
+                            y='ventas',
+                            line_shape='spline',
+                            color='sucursal',
+                            title='Ventas por Mes - De Leña',
+                            markers=True,
+                            color_discrete_sequence=['white', 'yellow'])
+            fig20.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                    x=0.3,
+                                    y=.9,
+                                    font=dict(size=20)))
+            st.plotly_chart(fig20)
     else:
         plataforma = st.radio("Selecciona la plataforma Delivery",
                             ["*UberEats*", "*Rappi*"],
                             horizontal=True)
         if plataforma == '*UberEats*':
-            st.header(":green[Uber Eats]")
+            st.header(":green[Uber Eats] Arracház")
             st.subheader('Tasa en Línea', divider=True)
             linea_arrachaz = linea[linea['restaurante'] == 'Arracház']
             # linea_arrachaz
@@ -270,10 +328,13 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='# Pedidos No Completados - Arracház',
-                            color='sucursal')
+                            color='sucursal',
+                            text='no completados')
             fig18.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
                                     y=.9,
                                     font=dict(size=20)))
             st.plotly_chart(fig18)
+        else:
+            st.header('Rappi Arracház')
