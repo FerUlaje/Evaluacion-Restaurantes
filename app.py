@@ -4,49 +4,149 @@ import plotly.express as px
 import openpyxl as op
 
 st.title('Métricas :red[DeLeña] y :red[Arracház]')
+# orden meses
+orden_meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 # cargando los datasets
 seguidores = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=0)
+ctr = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=1)
 linea = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=2)
 pedidos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=4)
 incorrectos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=5)
 rappi = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=6)
+pedidos['mes'] = pd.Categorical(pedidos['mes'], categories=orden_meses, ordered=True)
 
 metrica = st.radio("Selecciona el indicador:", 
                    ["Redes Sociales", "Plataformas Delivery"],
                    captions=["Seguidores, Indicadores de Campañas, Comparativas.",
                              "Top Uber Eats."],
                              horizontal=True)
-orden_meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
 if metrica == "Redes Sociales":
-    st.header("Seguidores :blue[Facebook] & :orange[Instagram]")
-    # seguidores
-    fig2 = px.bar(seguidores, x='mes', y='seguidores', 
-                    pattern_shape='red_social', 
-                    barmode='group', 
-                    color='restaurante',
-                    text_auto=True)
-    fig2.update_traces(textposition='outside')
-    st.plotly_chart(fig2)
-    st.divider()
-    st.header("Indicadores de Campañas: :green[CTR]")
-    ctr = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=1)
-    #ctr['ctr'] = ctr['ctr'].apply(lambda x: f"{x:.2%}")
-    #ctr
-    orden_meses = ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre"]
-    ctr['mes'] = pd.Categorical(ctr['mes'], categories=orden_meses, ordered=True)
-    ctr_pivot = pd.pivot_table(ctr,
-                               index='mes',
-                               columns='restaurante',
-                               values='ctr',
-                               aggfunc='sum')
-    fig1 = px.bar(ctr_pivot, barmode='group')
-    fig1.update_traces(textposition='outside')
-    fig1.update_layout(yaxis=dict(ticksuffix="%"))
-    fig1.update_traces(textposition='outside')
-    st.plotly_chart(fig1)
-    st.divider()
-    st.header("Comparativa: :blue[Campaña vs Venta]")
+    restaurante = st.radio("Selecciona Restaurante",
+                            ["De Leña", "Arracház"],
+                            horizontal=True)
+    if restaurante == "Arracház":
+        st.header("Seguidores :blue[Facebook] & :orange[Instagram] - Arracház")
+        # seguidores
+        seguidores_arrachaz = seguidores[seguidores['restaurante'] == "Arracház"]
+        #seguidores_arrachaz
+        fig2 = px.bar(seguidores_arrachaz, 
+                        x='mes', 
+                        y='seguidores', 
+                        #pattern_shape='red_social', 
+                        barmode='group', 
+                        color='red_social',
+                        color_discrete_sequence=['blue', 'darkmagenta'],
+                        text_auto=True,
+                        title="Seguidores - Arracház")
+        fig2.update_traces(textposition='outside')
+        fig2.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        st.plotly_chart(fig2)
+        st.divider()
+        st.header("Indicadores de Campañas: :green[CTR] - Arracház")
+        ctr['mes'] = pd.Categorical(ctr['mes'], categories=orden_meses, ordered=True)
+        #ctr['ctr'] = ctr['ctr'].apply(lambda x: f"{x:.2%}")
+        #ctr
+        # gráfico impresiones
+        ctr_arrachaz = ctr[ctr['restaurante'] == 'Arracház']
+        #ctr_arrachaz
+        # gráfica impresiones y clicks arracház
+        fig25 = px.bar(ctr_arrachaz,
+                        x='mes',
+                        y=['impresiones', 'clicks'],
+                        barmode='group',
+                        text_auto=True,
+                        title='Impresiones y Clicks - Arracház',
+                        labels={'value': 'Impresiones/Clicks',
+                                'mes': 'Mes'})
+        fig25.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        fig25.update_traces(textposition='outside')
+        st.plotly_chart(fig25)
+        #orden_meses = ["Julio", "Agosto", "Septiembre", "Octubre", "Noviembre"]
+        #ctr['mes'] = pd.Categorical(ctr['mes'], categories=orden_meses, ordered=True)
+        fig1 = px.bar(ctr_arrachaz,
+                        x='mes',
+                        y='ctr',
+                        barmode='group',
+                        text = ctr_arrachaz['ctr'].apply(lambda p: f"{p:.3f}%"),
+                        title='CTR - Arracház',
+                        color_discrete_sequence=['mediumseagreen'])
+        fig1.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        fig1.update_traces(textposition='outside')
+        #fig1.update_layout(yaxis=dict(ticksuffix="%"))
+        st.plotly_chart(fig1)
+        st.divider()
+        st.header("Comparativa: :blue[Campaña vs Venta] - Arracház")
+    else:
+        st.header("Seguidores :blue[Facebook] & :orange[Instagram] - De Leña")
+        seguidores_delena = seguidores[seguidores['restaurante'] == "DeLeña"]
+        seguidores_delena
+        # gráfica seguidores de leña
+        fig26 = px.bar(seguidores_delena, 
+                        x='mes', 
+                        y='seguidores', 
+                        #pattern_shape='red_social', 
+                        barmode='group', 
+                        color='red_social',
+                        color_discrete_sequence=['blue', 'darkmagenta'],
+                        text_auto=True,
+                        title="Seguidores - De Leña")
+        fig26.update_traces(textposition='outside')
+        fig26.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        st.plotly_chart(fig26)
+        st.divider()
+        st.header("Indicadores de Campañas: :green[CTR] - De Leña")
+        ctr_delena = ctr[ctr['restaurante'] == 'DeLeña']
+        ctr_delena['mes'] = pd.Categorical(ctr_delena['mes'], categories=orden_meses, ordered=True)
+        fig28 = px.bar(ctr_delena,
+                        x='mes',
+                        y=['impresiones', 'clicks'],
+                        barmode='group',
+                        text_auto=True,
+                        title='Impresiones y Clicks - Arracház',
+                        labels={'value': 'Impresiones/Clicks',
+                                'mes': 'Mes'})
+        fig28.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        fig28.update_traces(textposition='outside')
+        st.plotly_chart(fig28)
+        # crt de leña
+        fig27 = px.bar(ctr_delena,
+                        x='mes',
+                        y='ctr',
+                        barmode='group',
+                        text = ctr_delena['ctr'].apply(lambda p: f"{p:.3f}%"),
+                        title='CTR - De Leña',
+                        color_discrete_sequence=['mediumseagreen'])
+        fig27.update_layout(yaxis=dict(showgrid=False),
+                                title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)))
+        fig27.update_traces(textposition='outside')
+        #fig1.update_layout(yaxis=dict(ticksuffix="%"))
+        st.plotly_chart(fig27)
+        st.divider()
+        st.header("Comparativa: :blue[Campaña vs Venta] - De Leña")
 else:
     #st.header("Plataformas Delivery")
     restaurante = st.radio("Selecciona Restaurante",
@@ -71,7 +171,8 @@ else:
                             range_y=[0.93, 1.01],
                             title="Tasa en Línea - De Leña",
                             text = 'tasa en línea')
-            fig6.update_traces(textposition='top center')
+            fig6.update_traces(textposition='top center',
+                               text=linea_delena['tasa en línea'].apply(lambda x: f"{x:.2f}%"))
             fig6.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                         x=0.3,
@@ -98,7 +199,7 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='# Pedidos en Ubear Eats - De Leña',
-                            line_group='año',
+                            line_dash='año',
                             color_discrete_sequence=['aqua', 'teal'],
                             text='pedidos')
             fig8.update_traces(textposition='bottom center')
@@ -135,11 +236,19 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Ticket Promedio',
-                            line_group='año',
-                            color_discrete_sequence=['aqua', 'teal'],
-                            line_dash_sequence=['dashdot'],
+                            line_dash='año',
+                            color_discrete_sequence=['aqua', 'teal', 'white', 'black'],
+                            #line_dash_sequence=['dashdot'],
                             text='ticket promedio')
-            fig9.update_traces(textposition='top center')
+            #for trace in fig9.data:
+                #if trace.name == "Américas, 2024":
+                    #trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena['sucursal'] == 'Américas']["ticket promedio"]]
+                    #trace.textposition = 'top center'
+                #elif trace.name == 'Américas, 2023':
+                    #trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena["sucursal"] == "Américas"]["ticket promedio"]]
+                    #trace.textposition = 'bottom center'
+            fig9.update_traces(textposition='top center',
+                               )
             fig9.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -155,7 +264,18 @@ else:
                             markers=True,
                             title='Ventas por Mes - De Leña',
                             line_group='año',
-                            color_discrete_sequence=['white', 'gray'])
+                            color_discrete_sequence=['white', 'gray'],
+                            text='ventas')
+            # función para poner unas etiquetas de datos abajo y otras arriba
+            for trace in fig10.data:
+                if trace.name == "Américas":
+                    trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena['sucursal'] == 'Américas']["ventas"]]
+                    trace.textposition = 'top center'
+                elif trace.name == 'Plaza W':
+                    trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena["sucursal"] == "Plaza W"]["ventas"]]
+                    trace.textposition = 'bottom center'
+            #fig10.update_traces(text=pedidos_delena['ventas'].apply(lambda x: f"${x:,.0f}"),
+                                #textposition='top center')
             fig10.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -172,7 +292,9 @@ else:
                             color='sucursal',
                             line_shape='spline',
                             markers=True,
-                            title='Pedidos Incorrectos')
+                            title='Pedidos Incorrectos',
+                            text='pedidos incorrectos')
+            fig11.update_traces(textposition='top center')
             fig11.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -186,7 +308,9 @@ else:
                             color='sucursal',
                             line_shape='spline',
                             markers=True,
-                            title='Pedidos No Completados')
+                            title='Pedidos No Completados',
+                            text='no completados')
+            fig12.update_traces(textposition='top center')
             fig12.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -258,7 +382,7 @@ else:
                             y='tasa en línea',
                             line_shape='spline',
                             markers=True,
-                            title='Tasa en Línea - Arrachaz',
+                            title='Tasa en Línea - Arracház',
                             color='sucursal')
             fig13.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
