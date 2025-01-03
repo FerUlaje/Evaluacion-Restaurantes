@@ -92,7 +92,7 @@ if metrica == "Redes Sociales":
     else:
         st.header("Seguidores :blue[Facebook] & :orange[Instagram] - De Leña")
         seguidores_delena = seguidores[seguidores['restaurante'] == "DeLeña"]
-        seguidores_delena
+        #seguidores_delena
         # gráfica seguidores de leña
         fig26 = px.bar(seguidores_delena, 
                         x='mes', 
@@ -172,7 +172,7 @@ else:
                             title="Tasa en Línea - De Leña",
                             text = 'tasa en línea')
             fig6.update_traces(textposition='top center',
-                               text=linea_delena['tasa en línea'].apply(lambda x: f"{x:.2f}%"))
+                               )
             fig6.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                         x=0.3,
@@ -263,7 +263,7 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Ventas por Mes - De Leña',
-                            line_group='año',
+                            line_dash='año',
                             color_discrete_sequence=['white', 'gray'],
                             text='ventas')
             # función para poner unas etiquetas de datos abajo y otras arriba
@@ -383,7 +383,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Tasa en Línea - Arracház',
-                            color='sucursal')
+                            color='sucursal',
+                            text='tasa en línea')
+            fig13.update_traces(textposition='top center')
             fig13.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -400,7 +402,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='# Pedidos - Arracház',
-                            color='sucursal')
+                            color='sucursal',
+                            text='pedidos')
+            fig14.update_traces(textposition='top center')
             fig14.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -415,7 +419,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Ticket Promedio - Arracház',
-                            color='sucursal')
+                            color='sucursal',
+                            text='ticket promedio')
+            fig16.update_traces(textposition='top center')
             fig16.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -429,7 +435,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Ventas Totales por Mes',
-                            color='sucursal')
+                            color='sucursal',
+                            text='ventas')
+            fig15.update_traces(textposition='top center')
             fig15.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -445,7 +453,9 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='# Pedidos Incorrectos - Arracház',
-                            color='sucursal')
+                            color='sucursal',
+                            text='pedidos incorrectos')
+            fig17.update_traces(textposition='top center')
             fig17.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -461,6 +471,7 @@ else:
                             title='# Pedidos No Completados - Arracház',
                             color='sucursal',
                             text='no completados')
+            fig18.update_traces(textposition='top center')
             fig18.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
