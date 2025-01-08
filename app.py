@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import openpyxl as op
+import plotly.graph_objects as go
 
 st.title('Métricas :red[DeLeña] y :red[Arracház]')
 # orden meses
@@ -14,6 +15,7 @@ pedidos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=4)
 incorrectos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=5)
 rappi = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=6)
 pedidos['mes'] = pd.Categorical(pedidos['mes'], categories=orden_meses, ordered=True)
+seguidores_nvo_delena = pd.read_excel('./datasets/seguidores deleña.xlsx', sheet_name=0)
 
 metrica = st.radio("Selecciona el indicador:", 
                    ["Redes Sociales", "Plataformas Delivery"],
@@ -94,6 +96,71 @@ if metrica == "Redes Sociales":
         seguidores_delena = seguidores[seguidores['restaurante'] == "DeLeña"]
         #seguidores_delena
         # gráfica seguidores de leña
+        # gráfica con eje secundario
+        followers_fb = seguidores_nvo_delena[seguidores_nvo_delena['red_social'] == 'Facebook']
+        # crear la figura con el primer eje y 
+        fig1ereje = go.Figure()
+        # añadir la primera serie de datos
+        fig1ereje.add_trace(go.Scatter(x=followers_fb['mes'], 
+                                        y=followers_fb['nuevos'],  
+                                        mode='lines+text',
+                                        text=followers_fb['nuevos'],
+                                        textposition='top center',
+                                        name='Nuevos Seguidores',
+                                        line=dict(color='royalblue',
+                                                    dash='dash')))
+        fig1ereje.add_trace(go.Scatter(x=followers_fb['mes'],
+                                        y=followers_fb['seguidores_totales'],
+                                        mode='lines+text',
+                                        text=followers_fb['seguidores_totales'],
+                                        textposition='top center',
+                                        name='Seguidores Acumulados',
+                                        yaxis='y2',
+                                        line=dict(color='deepskyblue')))
+        # configura los ejes
+        fig1ereje.update_layout(
+            title='Seguidores - Facebook',
+            xaxis_title='Seguidores',
+            yaxis_title='Nuevos Seguidores',
+            yaxis2=dict(
+                title='Seguidores Acumulados',
+                overlaying='y',
+                side='right'
+            )
+        )
+        st.plotly_chart(fig1ereje)
+        followers_ig = seguidores_nvo_delena[seguidores_nvo_delena['red_social'] == 'Instagram']
+        # crear la figura con el primer eje y 
+        fig2doeje = go.Figure()
+        # añadir la primera serie de datos
+        fig2doeje.add_trace(go.Scatter(x=followers_ig['mes'], 
+                                        y=followers_ig['nuevos'],  
+                                        mode='lines+text',
+                                        text=followers_ig['nuevos'],
+                                        textposition='top center',
+                                        name='Nuevos Seguidores',
+                                        line=dict(color='salmon',
+                                                    dash='dash')))
+        fig2doeje.add_trace(go.Scatter(x=followers_ig['mes'],
+                                        y=followers_ig['seguidores_totales'],
+                                        mode='lines+text',
+                                        text=followers_ig['seguidores_totales'],
+                                        textposition='top center',
+                                        name='Seguidores Acumulados',
+                                        yaxis='y2',
+                                        line=dict(color='darksalmon')))
+        # configura los ejes
+        fig2doeje.update_layout(
+            title='Seguidores - Instagram',
+            xaxis_title='Seguidores',
+            yaxis_title='Nuevos Seguidores',
+            yaxis2=dict(
+                title='Seguidores Acumulados',
+                overlaying='y',
+                side='right'
+            )
+        )
+        st.plotly_chart(fig2doeje)
         fig26 = px.bar(seguidores_delena, 
                         x='mes', 
                         y='seguidores', 
