@@ -31,7 +31,74 @@ if metrica == "Redes Sociales":
         st.header("Seguidores :blue[Facebook] & :orange[Instagram] - Arracház")
         # seguidores
         seguidores_arrachaz = seguidores[seguidores['restaurante'] == "Arracház"]
+        seguidores_arrachaz_nvo = seguidores_nvo_delena[seguidores_nvo_delena['restaurante'] == "Arracház"]
+
+        followers_fb_arrachaz = seguidores_arrachaz_nvo[seguidores_arrachaz_nvo['red_social'] == 'Facebook']
+
+        fig3ereje = go.Figure()
+        # añadir la primera serie de datos
+        fig3ereje.add_trace(go.Scatter(x=followers_fb_arrachaz['mes'], 
+                                        y=followers_fb_arrachaz['nuevos'],  
+                                        mode='lines+text',
+                                        text=followers_fb_arrachaz['nuevos'],
+                                        textposition='top center',
+                                        name='Nuevos Seguidores',
+                                        line=dict(color='royalblue',
+                                                    dash='dash')))
+        fig3ereje.add_trace(go.Scatter(x=followers_fb_arrachaz['mes'],
+                                        y=followers_fb_arrachaz['seguidores_totales'],
+                                        mode='lines+text',
+                                        text=followers_fb_arrachaz['seguidores_totales'],
+                                        textposition='top center',
+                                        name='Seguidores Acumulados',
+                                        yaxis='y2',
+                                        line=dict(color='deepskyblue')))
+        # configura los ejes
+        fig3ereje.update_layout(
+            title='Seguidores - Facebook',
+            xaxis_title='Seguidores',
+            yaxis_title='Nuevos Seguidores',
+            yaxis2=dict(
+                title='Seguidores Acumulados',
+                overlaying='y',
+                side='right'
+            )
+        )
+        st.plotly_chart(fig3ereje)
         #seguidores_arrachaz
+        # gráfica IG
+        followers_ig = seguidores_arrachaz_nvo[seguidores_arrachaz_nvo['red_social'] == 'Instagram']
+        # crear la figura con el primer eje y 
+        fig4doeje = go.Figure()
+        # añadir la primera serie de datos
+        fig4doeje.add_trace(go.Scatter(x=followers_ig['mes'], 
+                                        y=followers_ig['nuevos'],  
+                                        mode='lines+text',
+                                        text=followers_ig['nuevos'],
+                                        textposition='top center',
+                                        name='Nuevos Seguidores',
+                                        line=dict(color='salmon',
+                                                    dash='dash')))
+        fig4doeje.add_trace(go.Scatter(x=followers_ig['mes'],
+                                        y=followers_ig['seguidores_totales'],
+                                        mode='lines+text',
+                                        text=followers_ig['seguidores_totales'],
+                                        textposition='top center',
+                                        name='Seguidores Acumulados',
+                                        yaxis='y2',
+                                        line=dict(color='darksalmon')))
+        # configura los ejes
+        fig4doeje.update_layout(
+            title='Seguidores - Instagram',
+            xaxis_title='Seguidores',
+            yaxis_title='Nuevos Seguidores',
+            yaxis2=dict(
+                title='Seguidores Acumulados',
+                overlaying='y',
+                side='right'
+            )
+        )
+        st.plotly_chart(fig4doeje)
         fig2 = px.bar(seguidores_arrachaz, 
                         x='mes', 
                         y='seguidores', 
@@ -97,7 +164,8 @@ if metrica == "Redes Sociales":
         #seguidores_delena
         # gráfica seguidores de leña
         # gráfica con eje secundario
-        followers_fb = seguidores_nvo_delena[seguidores_nvo_delena['red_social'] == 'Facebook']
+        seguidores_delena_nvo = seguidores_nvo_delena[seguidores_nvo_delena['restaurante'] == 'DeLeña']
+        followers_fb = seguidores_delena_nvo[seguidores_delena_nvo['red_social'] == 'Facebook']
         # crear la figura con el primer eje y 
         fig1ereje = go.Figure()
         # añadir la primera serie de datos
@@ -129,7 +197,7 @@ if metrica == "Redes Sociales":
             )
         )
         st.plotly_chart(fig1ereje)
-        followers_ig = seguidores_nvo_delena[seguidores_nvo_delena['red_social'] == 'Instagram']
+        followers_ig = seguidores_delena_nvo[seguidores_delena_nvo['red_social'] == 'Instagram']
         # crear la figura con el primer eje y 
         fig2doeje = go.Figure()
         # añadir la primera serie de datos
