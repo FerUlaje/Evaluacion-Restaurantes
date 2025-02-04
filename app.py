@@ -16,6 +16,7 @@ incorrectos = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=
 rappi = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=6)
 pedidos['mes'] = pd.Categorical(pedidos['mes'], categories=orden_meses, ordered=True)
 seguidores_nvo_delena = pd.read_excel('./datasets/seguidores deleña.xlsx', sheet_name=0)
+calif = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=3)
 
 metrica = st.radio("Selecciona el indicador:", 
                    ["Redes Sociales", "Plataformas Delivery"],
@@ -305,7 +306,8 @@ else:
                             markers=True,
                             range_y=[0.93, 1.01],
                             title="Tasa en Línea - De Leña",
-                            text = 'tasa en línea')
+                            text = 'tasa en línea',
+                            line_dash='año')
             fig6.update_traces(textposition='top center',
                                )
             fig6.update_layout(yaxis=dict(showgrid=False),
@@ -323,6 +325,23 @@ else:
                             color='sucursal')
             #st.plotly_chart(fig7)
             st.subheader('Calificación', divider=True)
+            calif_delena = calif[calif['restaurante'] == 'DeLeña']
+            fig29 = px.line(calif_delena,
+                            x='mes',
+                            y='calificación',
+                            color='sucursal',
+                            line_shape='spline',
+                            markers=True,
+                            title='Calificación Promedio 3 Meses',
+                            text='calificación')
+            fig29.update_traces(textposition='top center')
+            fig29.update_layout(title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)
+                                ),
+                                yaxis=dict(showgrid=False))
+            st.plotly_chart(fig29)
             st.subheader('Pedidos', divider=True)
             pedidos_delena = pedidos[pedidos['restaurante'] == 'DeLeña']
             # pedidos_delena
@@ -409,6 +428,9 @@ else:
                 elif trace.name == 'Plaza W':
                     trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena["sucursal"] == "Plaza W"]["ventas"]]
                     trace.textposition = 'bottom center'
+                elif trace.name == 'Altacia':
+                    trace.text = [f"${v:,.0f}" for v in pedidos_delena[pedidos_delena["sucursal"] == "Altacia"]["ventas"]]
+                    trace.textposition = 'bottom center'
             #fig10.update_traces(text=pedidos_delena['ventas'].apply(lambda x: f"${x:,.0f}"),
                                 #textposition='top center')
             fig10.update_layout(yaxis=dict(showgrid=False),
@@ -428,7 +450,8 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Pedidos Incorrectos',
-                            text='pedidos incorrectos')
+                            text='pedidos incorrectos',
+                            line_dash='año')
             fig11.update_traces(textposition='top center')
             fig11.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -444,7 +467,8 @@ else:
                             line_shape='spline',
                             markers=True,
                             title='Pedidos No Completados',
-                            text='no completados')
+                            text='no completados',
+                            line_dash='año')
             fig12.update_traces(textposition='top center')
             fig12.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -519,7 +543,8 @@ else:
                             markers=True,
                             title='Tasa en Línea - Arracház',
                             color='sucursal',
-                            text='tasa en línea')
+                            text='tasa en línea',
+                            line_dash='año')
             fig13.update_traces(textposition='top center')
             fig13.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -528,6 +553,23 @@ else:
                                     font=dict(size=20)))
             st.plotly_chart(fig13)
             st.subheader('Calificación', divider=True)
+            calif_arrachaz = calif[calif['restaurante'] == 'Arracház']
+            fig30 = px.line(calif_arrachaz,
+                            x='mes',
+                            y='calificación',
+                            color='sucursal',
+                            line_shape='spline',
+                            markers=True,
+                            title='Calificación Promedio 3 Meses',
+                            text='calificación')
+            fig30.update_traces(textposition='top center')
+            fig30.update_layout(title = dict(
+                                        x=0.3,
+                                        y=0.9,
+                                        font=dict(size=20)
+                                ),
+                                yaxis=dict(showgrid=False))
+            st.plotly_chart(fig30)
             st.subheader('Pedidos', divider=True)
             pedidos_arrachaz = pedidos[pedidos['restaurante'] == 'Arracház']
             # pedidos_arrachaz
@@ -538,7 +580,8 @@ else:
                             markers=True,
                             title='# Pedidos - Arracház',
                             color='sucursal',
-                            text='pedidos')
+                            text='pedidos',
+                            line_dash='año')
             fig14.update_traces(textposition='top center')
             fig14.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -555,7 +598,8 @@ else:
                             markers=True,
                             title='Ticket Promedio - Arracház',
                             color='sucursal',
-                            text='ticket promedio')
+                            text='ticket promedio',
+                            line_dash='año')
             fig16.update_traces(textposition='top center')
             fig16.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -571,7 +615,8 @@ else:
                             markers=True,
                             title='Ventas Totales por Mes',
                             color='sucursal',
-                            text='ventas')
+                            text='ventas',
+                            line_dash='año')
             fig15.update_traces(textposition='top center')
             fig15.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -589,7 +634,8 @@ else:
                             markers=True,
                             title='# Pedidos Incorrectos - Arracház',
                             color='sucursal',
-                            text='pedidos incorrectos')
+                            text='pedidos incorrectos',
+                            line_dash='año')
             fig17.update_traces(textposition='top center')
             fig17.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
@@ -605,7 +651,8 @@ else:
                             markers=True,
                             title='# Pedidos No Completados - Arracház',
                             color='sucursal',
-                            text='no completados')
+                            text='no completados',
+                            line_dash='año')
             fig18.update_traces(textposition='top center')
             fig18.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
