@@ -489,7 +489,8 @@ else:
                             color='sucursal',
                             title='Número de Pedidos - De Leña',
                             markers=True,
-                            color_discrete_sequence=['orange', 'orangered'])
+                            color_discrete_sequence=['orange', 'orangered'],
+                            line_dash='año')
             fig19.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -505,7 +506,8 @@ else:
                             color='sucursal',
                             title='Ticket Premedio - De Leña',
                             markers=True,
-                            color_discrete_sequence=['orange', 'orangered'])
+                            color_discrete_sequence=['orange', 'orangered'],
+                            line_dash='año')
             fig21.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -520,7 +522,8 @@ else:
                             color='sucursal',
                             title='Ventas por Mes - De Leña',
                             markers=True,
-                            color_discrete_sequence=['orange', 'orangered'])
+                            color_discrete_sequence=['orange', 'orangered'],
+                            line_dash='año')
             fig20.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
@@ -673,7 +676,8 @@ else:
                             title='# Pedidos - Arracház',
                             color='sucursal',
                             text='pedidos',
-                            color_discrete_sequence=['darkorange'])
+                            color_discrete_sequence=['darkorange'],
+                            line_dash='año')
             fig22.update_layout(yaxis=dict(showgrid=False),
                                 title = dict(
                                     x=0.3,
