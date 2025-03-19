@@ -17,11 +17,14 @@ rappi = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=6)
 pedidos['mes'] = pd.Categorical(pedidos['mes'], categories=orden_meses, ordered=True)
 seguidores_nvo_delena = pd.read_excel('./datasets/seguidores deleña.xlsx', sheet_name=0)
 calif = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=3)
+promo_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=1)
+platillos_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=2)
 
 metrica = st.radio("Selecciona el indicador:", 
-                   ["Redes Sociales", "Plataformas Delivery"],
+                   ["Redes Sociales", "Plataformas Delivery", "Control Seguimiento"],
                    captions=["Seguidores, Indicadores de Campañas, Comparativas.",
-                             "Top Uber Eats."],
+                             "Top Uber Eats.",
+                             "Promociones, platillos"],
                              horizontal=True)
 
 if metrica == "Redes Sociales":
@@ -159,7 +162,7 @@ if metrica == "Redes Sociales":
         st.plotly_chart(fig1)
         st.divider()
         st.header("Comparativa: :blue[Campaña vs Venta] - Arracház")
-    else:
+    if restaurante == 'De Leña':
         st.header("Seguidores :blue[Facebook] & :orange[Instagram] - De Leña")
         seguidores_delena = seguidores[seguidores['restaurante'] == "DeLeña"]
         #seguidores_delena
@@ -283,7 +286,7 @@ if metrica == "Redes Sociales":
         st.plotly_chart(fig27)
         st.divider()
         st.header("Comparativa: :blue[Campaña vs Venta] - De Leña")
-else:
+if metrica == "Plataformas Delivery":
     #st.header("Plataformas Delivery")
     restaurante = st.radio("Selecciona Restaurante",
                             ["De Leña", "Arracház"],
@@ -718,3 +721,83 @@ else:
                                     font=dict(size=20)))
             fig24.update_traces(textposition='top center')
             st.plotly_chart(fig24)
+if metrica == "Control Seguimiento":
+    restaurante = st.radio("Selecciona Restaurante",
+                            ["De Leña", "Arracház"],
+                            horizontal=True)
+    if restaurante == 'De Leña':
+        st.warning('Promociones De Leña a Marzo 2025')
+        
+    if restaurante == 'Arracház':
+        st.warning('Promociones Arracház a Marzo 2025')
+        # promo_arrachaz
+        cupon_altacia = promo_arrachaz[promo_arrachaz['comentariodescuento'] == 'CUPON DE ALTACIA']
+        fig31 = px.line(cupon_altacia,
+                        x='cierre',
+                        y='cantidad',
+                        line_group='descripcion',
+                        text='descripcion',
+                        title='Cupones Canjeados')
+        fig31.update_layout(yaxis=dict(showgrid=True),
+                                title=dict(
+                                    x=0.4,
+                                    y=0.9,
+                                    font=dict(size=20)),
+                            xaxis_showgrid=True)
+        fig31.update_traces(textposition='top center')
+        st.plotly_chart(fig31)
+        st.divider()
+        # platillos_arrachaz
+        tacos = ['TACO CAMARON CHIMICHURRI', 
+                 'TACO DE CAMARON DIABLO',
+                 'TACO ENSENADA']
+        platillos_arrachaz_cuaresma = platillos_arrachaz[platillos_arrachaz['DESCRIPCION'].str.strip().str.upper().isin(tacos)]
+        # platillos_arrachaz_cuaresma
+        # ventas de los platillos en promoción
+        ventas_totales = platillos_arrachaz_cuaresma['VENTA_TOTAL'].sum()
+        #
+        tacos_arrachaz = platillos_arrachaz_cuaresma.groupby('DESCRIPCION')['CANTIDAD'].sum()
+        # tacos_arrachaz
+        fig32 = px.line(tacos_arrachaz,
+                        y='CANTIDAD',
+                        markers=True,
+                        title='Venta de Tacos Promocionales',
+                        labels = {'DESCRIPCION' : 'Taco', 'CANTIDAD' : 'Cantidad'},
+                        template='plotly_white',
+                        line_shape='spline')
+        fig32.update_layout(
+            hovermode='x unified',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title_font_size=20,
+            xaxis_showgrid=True,
+            yaxis_showgrid=True
+        )
+        # agregando etiquetas de valor
+        fig32.update_traces(
+            line=dict(width=2.5, color='#4B8BBE',
+                      
+        ))
+        st.plotly_chart(fig32)
+        st.write('Ventas Totales por Tacos de Temporada:', ventas_totales)
+        menus_promo_arrachaz = platillos_arrachaz[platillos_arrachaz['GRUPO'] == 'MENUS PROMOCIONALES']
+        menu_promo_arrachaz = menus_promo_arrachaz.groupby('DESCRIPCION')['CANTIDAD'].sum()
+        fig33 = px.line(menu_promo_arrachaz,
+                        y='CANTIDAD',
+                        markers=True,
+                        title='Venta de Menus Ejecutivos',
+                        labels = {'DESCRIPCION' : 'Menu', 'CANTIDAD' : 'Cantidad'},
+                        template='plotly_white',
+                        line_shape='spline')
+        fig33.update_layout(
+            hovermode='x unified',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title_font_size=20,
+            xaxis_showgrid=True,
+            yaxis_showgrid=True
+        )
+        # agregando etiquetas de valor
+        fig33.update_traces(
+            line=dict(width=2.5, color='#4B8BBE',
+                      
+        ))
+        st.plotly_chart(fig33)
