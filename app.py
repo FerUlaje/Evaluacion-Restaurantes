@@ -19,6 +19,7 @@ seguidores_nvo_delena = pd.read_excel('./datasets/seguidores deleña.xlsx', shee
 calif = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=3)
 promo_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=1)
 platillos_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=2)
+platillos_delena = pd.read_excel('./datasets/promociones.xlsx', sheet_name=0)
 
 metrica = st.radio("Selecciona el indicador:", 
                    ["Redes Sociales", "Plataformas Delivery", "Control Seguimiento"],
@@ -727,6 +728,33 @@ if metrica == "Control Seguimiento":
                             horizontal=True)
     if restaurante == 'De Leña':
         st.warning('Promociones De Leña a Marzo 2025')
+        # DataFrame platillos DeLeña
+        # platillos_delena
+        menu_promo_delena = platillos_delena[platillos_delena['GRUPO'] == 'MENU PROMOCIONALES']
+        menu_promo_delena = menu_promo_delena.groupby('DESCRIPCION')['CANTIDAD'].sum()
+        # DataFrame filtrado por menu promocionales
+        # menu_promo_delena
+        # gráfico de los menu promocionales
+        fig34 = px.line(menu_promo_delena,
+                        y='CANTIDAD',
+                        markers=True,
+                        title='Venta de Menus Promocionales',
+                        labels = {'DESCRIPCION' : 'Menu', 'CANTIDAD' : 'Cantidad'},
+                        template='plotly_white',
+                        line_shape='spline')
+        fig34.update_layout(
+            hovermode='x unified',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title_font_size=20,
+            xaxis_showgrid=True,
+            yaxis_showgrid=True
+        )
+        # agregando etiquetas de valor
+        fig34.update_traces(
+            line=dict(width=2.5, color='#4B8BBE',
+                      
+        ))
+        st.plotly_chart(fig34)
         
     if restaurante == 'Arracház':
         st.warning('Promociones Arracház a Marzo 2025')
