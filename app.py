@@ -358,7 +358,7 @@ if metrica == "Plataformas Delivery":
                             markers=True,
                             title='# Pedidos en Ubear Eats - De Leña',
                             line_dash='año',
-                            color_discrete_sequence=['aqua', 'teal'],
+                            color_discrete_sequence=['indianred', 'orchid', 'palegreen'],
                             text='pedidos')
             fig8.update_traces(textposition='bottom center')
             fig8.update_layout(title = dict(
@@ -395,7 +395,7 @@ if metrica == "Plataformas Delivery":
                             markers=True,
                             title='Ticket Promedio',
                             line_dash='año',
-                            color_discrete_sequence=['aqua', 'teal', 'white', 'black'],
+                            color_discrete_sequence=['indianred', 'orchid', 'palegreen'],
                             #line_dash_sequence=['dashdot'],
                             text='ticket promedio')
             #for trace in fig9.data:
@@ -422,7 +422,7 @@ if metrica == "Plataformas Delivery":
                             markers=True,
                             title='Ventas por Mes - De Leña',
                             line_dash='año',
-                            color_discrete_sequence=['white', 'gray'],
+                            color_discrete_sequence=['indianred', 'orchid', 'palegreen'],
                             text='ventas')
             # función para poner unas etiquetas de datos abajo y otras arriba
             for trace in fig10.data:
@@ -455,6 +455,7 @@ if metrica == "Plataformas Delivery":
                             markers=True,
                             title='Pedidos Incorrectos',
                             text='pedidos incorrectos',
+                            color_discrete_sequence=['indianred', 'orchid', 'palegreen'],
                             line_dash='año')
             fig11.update_traces(textposition='top center')
             fig11.update_layout(yaxis=dict(showgrid=False),
@@ -472,6 +473,7 @@ if metrica == "Plataformas Delivery":
                             markers=True,
                             title='Pedidos No Completados',
                             text='no completados',
+                            color_discrete_sequence=['indianred', 'orchid', 'palegreen'],
                             line_dash='año')
             fig12.update_traces(textposition='top center')
             fig12.update_layout(yaxis=dict(showgrid=False),
