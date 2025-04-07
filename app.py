@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import openpyxl as op
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 st.title('Métricas :red[DeLeña] y :red[Arracház]')
 # orden meses
@@ -20,12 +21,14 @@ calif = pd.read_excel('./datasets/metricas restaurantes.xlsx', sheet_name=3)
 promo_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=1)
 platillos_arrachaz = pd.read_excel('./datasets/promociones.xlsx', sheet_name=2)
 platillos_delena = pd.read_excel('./datasets/promociones.xlsx', sheet_name=0)
+historico = pd.read_excel('./datasets/historico.xlsx', sheet_name=0)
 
 metrica = st.radio("Selecciona el indicador:", 
-                   ["Redes Sociales", "Plataformas Delivery", "Control Seguimiento"],
+                   ["Redes Sociales", "Plataformas Delivery", "Control Seguimiento", "Histórico"],
                    captions=["Seguidores, Indicadores de Campañas, Comparativas.",
                              "Top Uber Eats.",
-                             "Promociones, platillos"],
+                             "Promociones, platillos",
+                             "Ventas Mensuales, Comensales"],
                              horizontal=True)
 
 if metrica == "Redes Sociales":
@@ -831,3 +834,121 @@ if metrica == "Control Seguimiento":
                       
         ))
         st.plotly_chart(fig33)
+if metrica == "Histórico":
+    restaurante = st.radio("Selecciona Restaurante",
+                            ["De Leña", "Arracház"],
+                            horizontal=True)
+    if restaurante == 'De Leña':
+        # historico dataset
+        delena_historico = historico[historico['restaurante'] == 'DeLeña']
+        
+        # delena_historico
+        # gráfica prueba
+        fig37 = make_subplots(
+            rows=4, cols=1,
+            subplot_titles=("Altacia", "Acueducto", "Amércias", "Plaza W"),
+            vertical_spacing=0.15,
+            specs=[
+                [{"secondary_y": True}],
+                [{"secondary_y": True}],
+                [{"secondary_y": True}],
+                [{"secondary_y": True}],
+            ]
+        )
+        colores = {
+            'Altacia': '#1f77b4',
+            'Acueducto': '#2ca02c',
+            'Américas': '#ff7f0e',
+            'Plaza W': '#d62728'
+        }
+
+        # Añadir datos para cada sucursal
+        for i, sucursal in enumerate(['Altacia', 'Acueducto', 'Américas', 'Plaza W'], 1):
+            df_sucursal = delena_historico[delena_historico['sucursal'] == sucursal]
+
+            fig37.add_trace(
+                go.Bar(
+                    x=df_sucursal['mes'],
+                    y=df_sucursal['comensales'],
+                    name=f'Comensales {sucursal}',
+                    opacity=0.6,
+                    showlegend=False
+                ),
+                row=i, col=1,
+                secondary_y=False
+            )
+
+            # Líneas para ticket promedio
+            fig37.add_trace(
+                go.Scatter(
+                    x=df_sucursal['mes'],
+                    y=df_sucursal['chequepromedio'],
+                    name=f'Ticket {sucursal}',
+                    line=dict(color=colores[sucursal], width=2.5),
+                    mode='lines+markers',
+                    marker=dict(size=8, symbol='diamond')
+                ),
+                row=i, col=1,
+                secondary_y=True
+            )
+
+        # Configuración del layout
+        fig37.update_layout(
+            title_text="Métricas por Sucursal - 2025",
+            height=1200,
+            hovermode='x unified',
+            margin=dict(t=100, b=50),
+            legend=dict(
+                orientation='h',
+                yanchor='bottom',
+                y=1.02,
+                xanchor='center',
+                x=0.5
+            )
+        )
+
+        # Configurar ejes para cada subgráfico
+        for i, sucursal in enumerate(['Altacia', 'Acueducto', 'Américas', 'Plaza W'], 1):
+            fig37.update_yaxes(
+                title_text="Comensales",
+                title_font=dict(color=colores[sucursal]),
+                secondary_y=False,
+                row=i, col=1
+            )
+            
+            fig37.update_yaxes(
+                title_text="Ticket Promedio",
+                title_font=dict(color=colores[sucursal]),
+                secondary_y=True,
+                row=i, col=1
+            )
+
+            fig37.update_xaxes(title_text="Mes", row=i, col=1)
+
+        # Añadir anotaciones personalizadas
+        fig37.add_annotation(
+            text="Datos mensuales por sucursal",
+            xref="paper", yref="paper",
+            x=0.5, y=1.1,
+            showarrow=False,
+            font=dict(size=20, color='White')
+        )
+
+        # Mostrar en Streamlit
+        st.title('Análisis Comparativo - 4 Sucursales')
+        st.plotly_chart(fig37, use_container_width=True)
+    if restaurante == 'Arracház':
+        arrachaz_hist = historico[historico['restaurante'] == 'Arracház']
+        arrachaz_hist
+        arrachaz_hist_pivot = pd.pivot_table(arrachaz_hist,
+                                            values='venta',
+                                            index='mes',
+                                            columns='sucursal')
+        fig36 = px.line(arrachaz_hist_pivot,
+                        markers=True,
+                        title='Ventas por Mes',
+                        template='plotly_white',
+                        labels = {'value' : 'Venta', 'mes' : 'Mes'},
+                        line_shape='spline')
+        st.plotly_chart(fig36)
+        # historico
