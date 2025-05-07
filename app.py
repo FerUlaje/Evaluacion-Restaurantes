@@ -28,7 +28,7 @@ metrica = st.radio("Selecciona el indicador:",
                    captions=["Seguidores, Indicadores de Campañas, Comparativas.",
                              "Top Uber Eats.",
                              "Promociones, platillos",
-                             "Ventas Mensuales, Comensales"],
+                             "Comensales, ticket promedio"],
                              horizontal=True)
 
 if metrica == "Redes Sociales":
@@ -951,4 +951,3 @@ if metrica == "Histórico":
                         labels = {'value' : 'Venta', 'mes' : 'Mes'},
                         line_shape='spline')
         st.plotly_chart(fig36)
-        # historico
