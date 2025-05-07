@@ -939,15 +939,95 @@ if metrica == "Histórico":
         st.plotly_chart(fig37, use_container_width=True)
     if restaurante == 'Arracház':
         arrachaz_hist = historico[historico['restaurante'] == 'Arracház']
-        arrachaz_hist
-        arrachaz_hist_pivot = pd.pivot_table(arrachaz_hist,
-                                            values='venta',
-                                            index='mes',
-                                            columns='sucursal')
-        fig36 = px.line(arrachaz_hist_pivot,
-                        markers=True,
-                        title='Ventas por Mes',
-                        template='plotly_white',
-                        labels = {'value' : 'Venta', 'mes' : 'Mes'},
-                        line_shape='spline')
-        st.plotly_chart(fig36)
+        #arrachaz_hist
+        # arracház
+        # gráfica prueba
+        fig38 = make_subplots(
+            rows=2, cols=1,
+            subplot_titles=("Morelia", "Altacia"),
+            vertical_spacing=0.15,
+            specs=[
+                [{"secondary_y": True}],
+                [{"secondary_y": True}],
+            ]
+        )
+        colores = {
+            'Morelia': '#1f77b4',
+            'Altacia': '#2ca02c',
+        }
+
+        # Añadir datos para cada sucursal
+        for i, sucursal in enumerate(['Morelia', 'Altacia'], 1):
+            df_sucursal = arrachaz_hist[arrachaz_hist['sucursal'] == sucursal]
+
+            fig38.add_trace(
+                go.Bar(
+                    x=df_sucursal['mes'],
+                    y=df_sucursal['comensales'],
+                    name=f'Comensales {sucursal}',
+                    opacity=0.6,
+                    showlegend=False
+                ),
+                row=i, col=1,
+                secondary_y=False
+            )
+
+            # Líneas para ticket promedio
+            fig38.add_trace(
+                go.Scatter(
+                    x=df_sucursal['mes'],
+                    y=df_sucursal['chequepromedio'],
+                    name=f'Ticket {sucursal}',
+                    line=dict(color=colores[sucursal], width=2.5),
+                    mode='lines+markers',
+                    marker=dict(size=8, symbol='diamond')
+                ),
+                row=i, col=1,
+                secondary_y=True
+            )
+
+        # Configuración del layout
+        fig38.update_layout(
+            title_text="Métricas por Sucursal - 2025",
+            height=1200,
+            hovermode='x unified',
+            margin=dict(t=100, b=50),
+            legend=dict(
+                orientation='h',
+                yanchor='bottom',
+                y=1.02,
+                xanchor='center',
+                x=0.5
+            )
+        )
+
+        # Configurar ejes para cada subgráfico
+        for i, sucursal in enumerate(['Morelia', 'Altacia'], 1):
+            fig38.update_yaxes(
+                title_text="Comensales",
+                title_font=dict(color=colores[sucursal]),
+                secondary_y=False,
+                row=i, col=1
+            )
+            
+            fig38.update_yaxes(
+                title_text="Ticket Promedio",
+                title_font=dict(color=colores[sucursal]),
+                secondary_y=True,
+                row=i, col=1
+            )
+
+            fig38.update_xaxes(title_text="Mes", row=i, col=1)
+
+        # Añadir anotaciones personalizadas
+        fig38.add_annotation(
+            text="Datos mensuales por sucursal",
+            xref="paper", yref="paper",
+            x=0.5, y=1.1,
+            showarrow=False,
+            font=dict(size=20, color='White')
+        )
+
+        # Mostrar en Streamlit
+        st.title('Análisis Comparativo - 2 Sucursales')
+        st.plotly_chart(fig38, use_container_width=True)
